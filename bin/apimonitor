@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const yargs = require('yargs');
+const {monitorApis} = require('..');
+
+yargs.usage(`Usage: apimonitor
+    -f [config js file path]
+        `).demandOption([]).help('h').alias('h', 'help');
+
+const {
+  argv
+} = yargs;
+
+const configFilePath = path.join(process.cwd(), argv.f || 'api-monitor.config.js');
+monitorApis(require(configFilePath));

@@ -41,7 +41,6 @@ const monitorApi = (monitorObj) => {
   };
   // check api
   checkApi(monitorObj).then(() => {
-    info('api-check', `start check ${monitorObjText}`);
     keep();
   }).catch((err) => {
     infoErr('api-error', `${err.message}, ${monitorObjText}`);

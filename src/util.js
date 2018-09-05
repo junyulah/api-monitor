@@ -22,7 +22,7 @@ const httpRequest = ({
         chunks.push(chunk);
       });
 
-      res.on('end', (chunk) => {
+      res.on('end', () => {
         response.body = chunks.join();
         resolve(response);
       });

@@ -13,7 +13,10 @@ module.exports = {
       }
     },
 
-    reporter: {
+    reporter: [{
+      type: 'shell',
+      cnt: 'ls'
+    }, {
       type: 'http',
       cnt: (errMsg, monitorObj) => {
         return {
@@ -26,9 +29,9 @@ module.exports = {
             }
           },
           data: `${errMsg}, ${JSON.stringify(monitorObj)}.`
-        }
+        };
       }
-    },
+    }],
 
     period: 60 * 1000 // 60s
   }]

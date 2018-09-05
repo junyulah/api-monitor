@@ -29,6 +29,9 @@ const {
   infoErr,
   httpRequest
 } = require('./util');
+const {
+  exec
+} = require('child_process');
 
 const monitorApi = (monitorObj) => {
   const monitorObjText = JSON.stringify(monitorObj);
@@ -44,7 +47,9 @@ const monitorApi = (monitorObj) => {
     keep();
   }).catch((err) => {
     infoErr('api-error', `${err.message}, ${monitorObjText}`);
-    report(monitorObj.reporter, err.message, monitorObj);
+    (Array.isArray(monitorObj.reporter) ? monitorObj.reporter : monitorObj.reporter ? [monitorObj.reporter] : []).map(item => {
+      report(item, err.message, monitorObj);
+    });
     keep();
   });
 };
@@ -57,10 +62,20 @@ const report = (reporter, errMsg, monitorObj) => {
       const reportInfo = reporter.cnt(errMsg, monitorObj);
       info('err-report', 'start to send report.');
       httpRequest(reportInfo).then((res) => {
-        console.log(res); // eslint-disable-line
+        info('report-response', res); // eslint-disable-line
         info('err-report', 'report sent. response of report.');
       }).catch(err => {
         infoErr('report-fail', `${err.message}. ${JSON.stringify(reportInfo)}.`);
+      });
+    } else if (reporter.type === 'shell') {
+      info('report-shell', `start to exec shell ${reporter.cnt}.`);
+      exec(reporter.cnt, (error, stdout, stderr) => {
+        if (error) {
+          infoErr('report-fail', `exec error: ${error}`);
+          return;
+        }
+        info('report-shell', `stdout: ${stdout}`);
+        info('report-shell', `stderr: ${stderr}`);
       });
     }
   }

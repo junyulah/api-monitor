@@ -1,8 +1,11 @@
-const {httpRequest} = require('./util');
+const {
+  httpRequest
+} = require('./util');
 
 const checkApi = ({
   type = 'http',
   api,
+  apiSender,
   responseChecker = defaultHttpResponseChecker
 }) => {
   const help = () => {
@@ -10,7 +13,11 @@ const checkApi = ({
       case 'http':
         return httpRequest(api);
       default:
-        throw new Error(`do not support ${type} type api check yet.`);
+        if (!apiSender) {
+          throw new Error('missing api sender.');
+        } else {
+          apiSender(api);
+        }
     }
   };
 

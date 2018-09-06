@@ -16,7 +16,7 @@ const checkApi = ({
         if (!apiSender) {
           throw new Error('missing api sender.');
         } else {
-          apiSender(api);
+          return apiSender(api);
         }
     }
   };

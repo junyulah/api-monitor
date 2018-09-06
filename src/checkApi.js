@@ -6,7 +6,7 @@ const checkApi = ({
   type = 'http',
   api,
   apiSender,
-  responseChecker = defaultHttpResponseChecker
+  responseChecker
 }) => {
   const help = () => {
     switch (type) {
@@ -24,6 +24,8 @@ const checkApi = ({
   return help().then((response) => {
     if (responseChecker) {
       return responseChecker(response, api);
+    } else if (type === 'http') {
+      return defaultHttpResponseChecker(response);
     }
   });
 };

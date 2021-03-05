@@ -31,6 +31,11 @@ const httpRequest = ({
     req.on('error', (err) => {
       reject(err);
     });
+
+    req.on('timeout', () => {
+      reject(new Error('timeout'));
+    })
+
     if (data !== null) {
       req.write(data);
     }
